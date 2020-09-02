@@ -7,12 +7,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/api/music', (req, res) => {
     res.send([
-        {
-            'id': 0,
-            'title': '',
-            'genre': '',
-            'rate': ''
-        }
     ])
 });
 
