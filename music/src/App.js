@@ -50,9 +50,11 @@ function App() {
                 <TableCell>별점</TableCell>
               </TableRow>
             </TableHead>
+            <TableBody>
                   {musics.map(m => {
                     return <Music title={m.title} genre={m.genre} rate={m.rate} />
                   })}
+                  </TableBody>
           </Table>
           : <FirstPage />}
 
