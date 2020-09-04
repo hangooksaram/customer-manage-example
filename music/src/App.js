@@ -58,7 +58,7 @@ function App() {
           </Table>
           : <FirstPage />}
 
-      <div style={styles.icon}><Button><MdAdd size="125"></MdAdd></Button></div>
+      <div style={styles.icon}><Button onKeyPress = {}><MdAdd size="125"></MdAdd></Button></div>
     </div>
   );
 }
