@@ -1,5 +1,4 @@
 {
-    
     "name": "management",
     "version": "1.0.0",
     "scripts": {
@@ -12,6 +11,7 @@
         "@material-ui/icons": "^4.9.1",
         "body-parser": "^1.18.3",
         "express": "^4.16.4",
+        "mysql": "^2.18.1",
         "react-icons": "^3.11.0"
     },
     "devDependencies": {

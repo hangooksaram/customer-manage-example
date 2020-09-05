@@ -21,19 +21,18 @@ function App() {
     callApi()
       .then(res => setMusics(res))
       .catch(err => console.log("this is error " + err));
-
+      
     //return () => clearInterval(timer);
   }, [musics])
 
 
   async function callApi() {
-    const response = await fetch('/api/music')
+    const response = await fetch('/musicdata')
     const body = await response.json();
-
     return body;
   }
 
-
+  console.log(callApi());
   const progress = () => {
     setCompleted(completed >= 100 ? 0 : completed + 1)
   }
@@ -41,7 +40,7 @@ function App() {
   return (
     <div>
       {
-        musics.length > 1 ?
+        musics.length > 0 ?
           <Table>
             <TableHead>
               <TableRow>
@@ -51,14 +50,14 @@ function App() {
               </TableRow>
             </TableHead>
             <TableBody>
-                  {musics.map(m => {
-                    return <Music title={m.title} genre={m.genre} rate={m.rate} />
-                  })}
-                  </TableBody>
+              {musics.map(m => {
+                return <Music title={m.title} genre={m.genre} rate={m.rate} />
+              })}
+            </TableBody>
           </Table>
           : <FirstPage />}
 
-      <div style={styles.icon}><Button onKeyPress = {}><MdAdd size="125"></MdAdd></Button></div>
+      <div style={styles.icon}><Button><MdAdd size="125"></MdAdd></Button></div>
     </div>
   );
 }

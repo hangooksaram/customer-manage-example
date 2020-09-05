@@ -1,13 +1,20 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const app = express();
-const port = process.env.PORT || 5000;
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+const express    = require('express');
+const dbconfig   = require('./config/database.js')();
+const connection = dbconfig.init();
 
-app.get('/api/music', (req, res) => {
-    res.send([
-    ])
+const app = express();
+
+// configuration 
+app.set('port', process.env.PORT || 5000);
+
+// routing
+app.get('/musicdata', (req, res) => { 
+  connection.query('SELECT * from musicdata', (error, rows) => {
+    if (error) throw error;
+    res.send(rows);
+  });
 });
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
+app.listen(app.get('port'), () => {
+  console.log('포트 넘버 : ' + app.get('port') + "에서 실행 중");
+});
