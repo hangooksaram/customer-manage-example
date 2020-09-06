@@ -17,17 +17,13 @@ function App() {
   const [completed, setCompleted] = useState(0);
 
   useEffect(() => {
-    //const timer = setInterval(progress, 20);
     callApi()
       .then(res => setMusics(res))
       .catch(err => console.log("this is error " + err));
-      
-    //return () => clearInterval(timer);
-  }, [musics])
-
+  }, [])
 
   async function callApi() {
-    const response = await fetch('/musicdata')
+    const response = await fetch('http://localhost:5000/musicdata')
     const body = await response.json();
     return body;
   }
