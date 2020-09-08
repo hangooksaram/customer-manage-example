@@ -11,7 +11,7 @@ app.set('port', process.env.PORT || 5000);
 app.get('/musicdata', (req, res) => { 
   connection.query('SELECT * from musicdata', (error, rows) => {
     if (error) throw error;
-    //res.header("Access-Control-Allow-Origin", "*")
+    res.header("Access-Control-Allow-Origin", "*")
     res.send(rows);
   });
 });
