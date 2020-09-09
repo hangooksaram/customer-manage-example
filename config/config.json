@@ -1,8 +1,0 @@
-{ 
-    "development": 
-    { "username": "hyunjae oh", 
-        "password": "0722", 
-        "database": "mydb", 
-        "host": "localhost", 
-        "dialect": "mysql", 
-        "operatorAliases" : false } }
