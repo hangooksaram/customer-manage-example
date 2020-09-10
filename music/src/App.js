@@ -6,15 +6,37 @@ import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import Button from '@material-ui/core/Button'
-import { MdAdd } from "react-icons/md";
+import { MdAdd, MdClear } from "react-icons/md";
 import FirstPage from './components/FirstPage'
-
-
 import { useState, useEffect } from 'react'
+import Modal from 'react-modal';
+import AddMusic from './components/AddMusic'
 
 function App() {
   const [musics, setMusics] = useState([]);
   const [completed, setCompleted] = useState(0);
+  const [isOpened, setIsOpened] = useState(false);
+
+  const openModal = () => {
+    setIsOpened(true);
+  }
+
+  const closeModal = () => {
+    setIsOpened(false);
+  }
+
+  const modalStyles = {
+    content: {
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)',
+        width : 370,
+        height : 370
+    }
+};
 
   useEffect(() => {
     callApi()
@@ -37,23 +59,18 @@ function App() {
     <div>
       {
         musics.length > 0 ?
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>제목</TableCell>
-                <TableCell>장르</TableCell>
-                <TableCell>별점</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
+          <div>
               {musics.map(m => {
                 return <Music title={m.title} genre={m.genre} rate={m.rate} />
               })}
-            </TableBody>
-          </Table>
+          </div>
           : <FirstPage />}
 
-      <div style={styles.icon}><Button><MdAdd size="125"></MdAdd></Button></div>
+      <div style={styles.icon}><Button onClick={openModal}><MdAdd size="125"></MdAdd></Button></div>
+      <Modal style = {modalStyles} onRequestClose={closeModal} isOpen={isOpened}>
+        <div style={{ display: 'flex' }}><div style={{ marginLeft: 'auto' }} onClick={closeModal}><MdClear /></div></div>
+        <div><AddMusic/></div>
+      </Modal>
     </div>
   );
 }
