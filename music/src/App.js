@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect }  from 'react';
 import Music from './components/Music'
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
@@ -8,13 +8,12 @@ import TableCell from '@material-ui/core/TableCell';
 import Button from '@material-ui/core/Button'
 import { MdAdd, MdClear } from "react-icons/md";
 import FirstPage from './components/FirstPage'
-import { useState, useEffect } from 'react'
 import Modal from 'react-modal';
 import AddMusic from './components/AddMusic'
 
-function App() {
+const App = () => {
   const [musics, setMusics] = useState([]);
-  const [completed, setCompleted] = useState(0);
+  /*const [completed, setCompleted] = useState(0);
   const [isOpened, setIsOpened] = useState(false);
 
   const openModal = () => {
@@ -23,7 +22,7 @@ function App() {
 
   const closeModal = () => {
     setIsOpened(false);
-  }
+  }*/
 
   const modalStyles = {
     content: {
@@ -40,19 +39,16 @@ function App() {
 
   useEffect(() => {
     callApi()
-      .then(res => setMusics(res))
+      .then(res => console.log(res)) //2.hooks를 호출해서 에러!
       .catch(err => console.log("this is error " + err));
   }, [])
 
-  async function callApi() {
+
+
+  const callApi = async() => { //1. function 에서(기본적인 javascript 문법) 에서 
     const response = await fetch('http://localhost:5000/musicdata')
     const body = await response.json();
     return body;
-  }
-
-  console.log(callApi());
-  const progress = () => {
-    setCompleted(completed >= 100 ? 0 : completed + 1)
   }
 
   return (
@@ -66,11 +62,11 @@ function App() {
           </div>
           : <FirstPage />}
 
-      <div style={styles.icon}><Button onClick={openModal}><MdAdd size="125"></MdAdd></Button></div>
+      {/*<div style={styles.icon}><Button onClick={openModal}><MdAdd size="125"></MdAdd></Button></div>
       <Modal style = {modalStyles} onRequestClose={closeModal} isOpen={isOpened}>
         <div style={{ display: 'flex' }}><div style={{ marginLeft: 'auto' }} onClick={closeModal}><MdClear /></div></div>
         <div><AddMusic/></div>
-      </Modal>
+            </Modal>*/}
     </div>
   );
 }
