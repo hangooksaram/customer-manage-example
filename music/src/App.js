@@ -39,7 +39,7 @@ const App = () => {
 
   useEffect(() => {
     callApi()
-      .then(res => console.log(res)) //2.hooks를 호출해서 에러!
+      .then(res => setMusics(res)) //2.hooks를 호출해서 에러!
       .catch(err => console.log("this is error " + err));
   }, [])
 
