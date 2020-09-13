@@ -37,7 +37,7 @@ const App = () => {
     }
 };
 
-  useEffect(() => {
+  /*useEffect(() => {
     callApi()
       .then(res => setMusics(res)) //2.hooks를 호출해서 에러!
       .catch(err => console.log("this is error " + err));
@@ -49,7 +49,7 @@ const App = () => {
     const response = await fetch('http://localhost:5000/musicdata')
     const body = await response.json();
     return body;
-  }
+  }*/
 
   return (
     <div>
