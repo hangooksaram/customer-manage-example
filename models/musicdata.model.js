@@ -1,5 +1,4 @@
-const musicdataRoutes = require("../routes/musicdata.routes");
-
+// Musicdata 모델 생성
 module.exports = (sequelize, Sequelize) => {
     const Musicdata = sequelize.define("musicdata", {
         title : {
@@ -9,9 +8,10 @@ module.exports = (sequelize, Sequelize) => {
             type : Sequelize.STRING
         },
         rate : {
-            type : NUMBER
-        }
-    });
+            type : Sequelize.INTEGER
+        },
+       
+    }, { timestamps: false});
 
 
         return Musicdata

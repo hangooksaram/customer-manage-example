@@ -23,7 +23,7 @@ exports.create = (req, res) => {
         })
         .catch(error => {
             res.status(500).send({
-                message: err.message
+                message: "this is error" + error.message
             })
         })
 }
@@ -39,7 +39,7 @@ exports.findAll = (req, res) => {
         .catch(error => {
             res.status(500).send({
                 message:
-                error.message
+                error.message + "dd"
             })
         })
 };

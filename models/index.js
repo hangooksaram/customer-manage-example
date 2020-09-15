@@ -1,4 +1,4 @@
-const config = require('../config/config.json');
+const config = require('../config/musicdata.config.js');
 
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize(config.database, config.username, config.password, {

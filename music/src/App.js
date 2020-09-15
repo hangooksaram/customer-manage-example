@@ -10,9 +10,10 @@ import { MdAdd, MdClear } from "react-icons/md";
 import FirstPage from './components/FirstPage'
 import Modal from 'react-modal';
 import AddMusic from './components/AddMusic'
+import MusicDataService from './services/MusicService';
 
 const App = () => {
-  useEffect(() => {
+  /*useEffect(() => {
     callApi()
       .then(res => setMusics(res)) //2.hooks를 호출해서 에러!
       .catch(err => console.log("this is error " + err));
@@ -22,11 +23,24 @@ const App = () => {
     const response = await fetch('http://localhost:5000/musicdata')
     const body = await response.json();
     return body;
-  }
+  }*/
+
+  useEffect(()=> {
+    retrieveMusics();
+  }, [])
 
   const [musics, setMusics] = useState([]);
   const [isOpened, setIsOpened] = useState(false);
 
+  const retrieveMusics = () =>{
+    MusicDataService.getAll()
+      .then(res => {
+        setMusics(res.data);
+      })
+      .catch(e=>{
+        console.log(e)
+      })
+  }
   const openModal = () => {
     setIsOpened(true);
   }
@@ -51,14 +65,14 @@ const App = () => {
   
   return (
     <div>
-      {
-        musics.length > 0 ?
+      {/*{
+        musics.length > 0 ?*/}
           <div>
             {musics.map(m => {
               return <Music title={m.title} genre={m.genre} rate={m.rate} />
             })}
           </div>
-          : <FirstPage />}
+         {/*} : <FirstPage />}*/}
 
       <div style={styles.icon}><Button onClick={openModal}><MdAdd size="125"></MdAdd></Button></div>
       <Modal style={modalStyles} onRequestClose={closeModal} isOpen={isOpened}>
