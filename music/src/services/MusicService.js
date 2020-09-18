@@ -4,7 +4,7 @@ const getAll = () => {
     return http.get('/musicdatas')
 }
 
-const create = data => {
+const create = (data) => {
     return http.post("/musicdatas", data);
 }
 
