@@ -1,22 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import Music from './components/Music'
+//import Music from './components/Music'
 import Button from '@material-ui/core/Button'
 import { MdAdd, MdClear } from "react-icons/md";
 import FirstPage from './components/FirstPage'
 import Modal from 'react-modal';
 import TextField from '@material-ui/core/TextField'
-//import AddMusic from './components/AddMusic'
+import AddMusic from './components/AddMusic'
 import MusicDataService from './services/MusicService';
-import { Table, TableHead, TableCell, TableContainer } from '@material-ui/core';
+import { Table, TableHead, TableCell, TableContainer, TableRow } from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/DeleteForever';
 
 const App = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [refresh, setRefresh] = useState(0);
+
+  
+  const [musics, setMusics] = useState([]);
   useEffect(() => {
     retrieveMusics();
-  }, [])
+  },
+    [refresh])
 
-  const [musics, setMusics] = useState([]);
   const [isOpened, setIsOpened] = useState(false);
-
   const retrieveMusics = () => {
     MusicDataService.getAll()
       .then(res => {
@@ -61,17 +66,27 @@ const App = () => {
           genre: res.data.genre,
           rate: res.data.rate
         })
-        console.log(res.data)
+        setRefresh(refresh => refresh + 1);
       }
       )
       .catch(e => {
         console.log(e)
       })
-      setTimeout(()=> {
-        setIsOpened(false);
-      }, 1000)
+    setTimeout(() => {
+      setIsOpened(false);
+    }, 1000)
   }
 
+  const deleteMusic = (id) => {
+    MusicDataService.remove(id)
+        .then(res => {
+            console.log(res.data);
+            setRefresh(refresh => refresh - 1);
+        })
+        .catch(e => {
+            console.log(e);
+        })
+}
 
   const modalStyles = {
     content: {
@@ -90,22 +105,27 @@ const App = () => {
     <div>
       {
         musics.length > 0 ?
-          <div>
-            <TableContainer>
-              <Table style = {{width : '100%'}}>
-                <TableHead style={{ backgroundColor: '#FFCA3D' }}>
-                  <TableCell style={styles.tableAttribute}>제목</TableCell>
-                  <TableCell style={styles.tableAttribute}>장르</TableCell>
-                  <TableCell style={styles.tableAttribute}>별점</TableCell>
-                </TableHead>
-              </Table>
-            </TableContainer>
-            <Table>
-            {musics.map(m => {
-              return <Music title={m.title} genre={m.genre} rate={m.rate} />
-            })} {/* table style이 제대로 적용되지 않음*/}
+          <TableContainer>
+            <Table style={{ width: '100%' }}>
+              <TableHead style={{ backgroundColor: '#FFCA3D' }}>
+                <TableCell style={styles.tableAttribute}>제목</TableCell>
+                <TableCell style={styles.tableAttribute}>장르</TableCell>
+                <TableCell style={styles.tableAttribute}>별점</TableCell>
+              </TableHead>
             </Table>
-          </div>
+            {musics.map(m => {
+              return (
+                <Table>
+                <TableRow>
+                    <TableCell style = {styles.tableCell}>{m.title}</TableCell>
+                    <TableCell style = {styles.tableCell}>{m.genre}</TableCell>
+                    <TableCell style = {styles.tableCell}>{m.rate}</TableCell>
+                    <TableCell><div onClick = {() => {deleteMusic(m.id)}}><DeleteIcon fontSize = 'large'/></div></TableCell>
+                </TableRow>
+            </Table>
+              )
+            })}
+          </TableContainer>
           : <FirstPage />
       }
       <div style={styles.icon}><Button onClick={openModal}><MdAdd size="125"></MdAdd></Button></div>
@@ -138,7 +158,17 @@ const styles = {
     textAlign: 'center',
     paddingRight: 27,
     color: 'white'
-  }
+  },
+  tableFont: {
+    width: '33%',
+    textAlign: 'center',
+    fontSize: 25
+  },
+  tableCell : {
+    width : '35%',
+    textAlign : 'center',
+    fontSize : 25
+},
 }
 
 export default App;

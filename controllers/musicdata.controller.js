@@ -44,6 +44,29 @@ exports.findAll = (req, res) => {
         })
 };
 
+exports.delete = (req, res) => {
+    const id = req.params.id;
+    Musicdata.destroy({
+        where : {id : id}
+    })
+        .then (num => {
+            if (num == 1) {
+                res.send({
+                    msg : "성공적으로 삭제되었습니다."
+                })
+            } else {
+                res.send({
+                    msg : '${id}번 음악을 삭제할수 없습니다'
+                })
+            }
+        })
+        .catch (e => {
+            res.status(500).send({
+                msg : e.message
+            })
+        })
+}
+
 /*exports.findOne = (req, res) => {
     const id = req.params.id;
 

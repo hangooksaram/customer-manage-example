@@ -1,13 +1,25 @@
 import React from 'react'
 import { TableCell, Table, TableRow } from '@material-ui/core'
-const Music = ({ title, genre, rate }) => {
+import DeleteIcon from '@material-ui/icons/DeleteForever';
+import MusicService from '../services/MusicService'
+const Music = ({ id, title, genre, rate }) => {
+    const deleteMusic = () => {
+        MusicService.remove(id)
+            .then(res => {
+                console.log(res.data);
+            })
+            .catch(e => {
+                console.log(e);
+            })
+    }
     return (
         <div>
-            <Table aria-label="simple table">
+            <Table>
                 <TableRow>
-                    <TableCell align = 'right' >{title}</TableCell>
-                    <TableCell align = 'right' >{genre}</TableCell>
-                    <TableCell align = 'right' >{rate}</TableCell>
+                    <TableCell style = {styles.tableCell}>{title}</TableCell>
+                    <TableCell style = {styles.tableCell}>{genre}</TableCell>
+                    <TableCell style = {styles.tableCell}>{rate}</TableCell>
+                    <TableCell><div onClick = {deleteMusic}><DeleteIcon fontSize = 'large'/></div></TableCell>
                 </TableRow>
             </Table>
         </div>
@@ -15,11 +27,10 @@ const Music = ({ title, genre, rate }) => {
 }
 
 const styles = {
-    container : {
-        display : 'flex',
-        flexDirection : 'row',
-        width : '100%',
-        justifyContent  : 'center'
+    tableCell : {
+        width : '35%',
+        textAlign : 'center',
+        fontSize : 25
     },
 }
 

@@ -8,7 +8,12 @@ const create = (data) => {
     return http.post("/musicdatas", data);
 }
 
+const remove = (id) => {
+    return http.delete(`/musicdatas/${id}`);
+}
+
 export default {
     getAll,
-    create
+    create,
+    remove
 }

@@ -6,7 +6,9 @@ module.exports = app => {
 
     router.post('/musicdatas', musicdatas.create);
 
-    router.get('/musicdatas', musicdatas.findAll)
+    router.get('/musicdatas', musicdatas.findAll);
+
+    router.delete('/musicdatas/:id', musicdatas.delete);
 
     app.use('/', router)
 }
