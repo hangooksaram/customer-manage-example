@@ -14,7 +14,8 @@ exports.create = (req, res) => {
     const musicdata = {
         title: req.body.title,
         genre: req.body.genre,
-        rate: req.body.rate
+        rate: req.body.rate,
+        comment : req.body.comment
     }
 
     Musicdata.create(musicdata)
@@ -66,6 +67,32 @@ exports.delete = (req, res) => {
             })
         })
 }
+
+exports.update = (req, res) => {
+    const id = req.params.id;
+
+    Musicdata.update(req.body, {
+        where : {id : id}
+    })
+        .then(num => {
+            if (num == 1) {
+                res.send({msg : "업데이트 성공"})
+            }
+         else {
+            res.send({
+                num : console.log(num),
+            })
+            console.log(num)
+        }
+        })
+        .catch (e => {
+            res.status(500).send({
+                msg : e + "업데이트 에러"
+            })
+        })
+    }
+  
+
 
 /*exports.findOne = (req, res) => {
     const id = req.params.id;

@@ -10,6 +10,9 @@ module.exports = (sequelize, Sequelize) => {
         rate : {
             type : Sequelize.INTEGER
         },
+        comment : {
+            type : Sequelize.STRING
+        }
        
     }, { timestamps: false});
 

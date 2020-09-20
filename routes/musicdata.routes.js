@@ -10,5 +10,7 @@ module.exports = app => {
 
     router.delete('/musicdatas/:id', musicdatas.delete);
 
+    router.put('/musicdatas/:id', musicdatas.update);
+
     app.use('/', router)
 }

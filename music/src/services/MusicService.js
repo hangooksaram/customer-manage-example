@@ -12,8 +12,13 @@ const remove = (id) => {
     return http.delete(`/musicdatas/${id}`);
 }
 
+const update = (id, data) => {
+    return http.put(`/musicdatas/${id}`, data);
+}
+
 export default {
     getAll,
     create,
-    remove
+    remove,
+    update
 }
