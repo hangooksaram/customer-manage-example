@@ -13,7 +13,7 @@ exports.create = (req, res) => {
 
     const musicdata = {
         title: req.body.title,
-        genre: req.body.genre,
+        timing: req.body.timing,
         rate: req.body.rate,
         comment : req.body.comment
     }

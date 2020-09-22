@@ -4,7 +4,7 @@ module.exports = (sequelize, Sequelize) => {
         title : {
             type : Sequelize.STRING
         },
-        genre : {
+        timing : {
             type : Sequelize.STRING
         },
         rate : {

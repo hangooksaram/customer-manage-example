@@ -1,19 +1,43 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { MdAdd, MdClear } from "react-icons/md";
 import FirstPage from './components/FirstPage'
 import Modal from 'react-modal';
 import TextField from '@material-ui/core/TextField'
 import MusicDataService from './services/MusicService';
-import { Table, TableHead, TableCell, TableContainer, TableRow, Button } from '@material-ui/core';
+import { Table, TableHead, TableCell, TableContainer, TableRow, Button, TableBody, TableFooter } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
+
+function usePrevious(data,value) {  //custom hook을 만들때는 use를 붙여야하는가..?
+  const ref = useRef();
+  console.log(data);
+  useEffect(() => {
+    ref.current = value;
+  },[data])
+  return ref.current;
+}
+
 const App = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [refresh, setRefresh] = useState(0);
   const [musics, setMusics] = useState([]);
+  const [ispoint, setIsPoint] = useState(false);
+  const [checkid, setCheckId] = useState(0);
 
+  const ispointed = (id) => {
+    setIsPoint(true);
+    setCheckId(id);
+  }
+
+  const isnotpointed = (id) => {
+    setIsPoint(false)
+    setCheckId(id);
+  }
   useEffect(() => {
     retrieveMusics();
   }, [refresh])
+
+
+  const previousmusic = usePrevious(musics.comment,musics.map(m=>m.comment));
 
   const [isOpened, setIsOpened] = useState(false);
   const [editOpened, setEditOpened] = useState(false);
@@ -36,7 +60,7 @@ const App = () => {
   }
 
   const openEditModal = id => {
-    setEditOpened(id)
+    setEditOpened(id);
   }
 
   const closeEditModal = () => {
@@ -46,7 +70,7 @@ const App = () => {
   const [musicdata, setMusicData] = useState({
     id: null,
     title: '',
-    genre: '',
+    timing: '',
     rate: '',
     comment: ''
   });
@@ -60,7 +84,7 @@ const App = () => {
     setMusicData({
       id: null,
       title: '',
-      genre: '',
+      timing: '',
       rate: '',
       comment: ''
     })
@@ -69,7 +93,7 @@ const App = () => {
   const addMusic = () => {
     let data = {
       title: musicdata.title,
-      genre: musicdata.genre,
+      timing: musicdata.timing,
       rate: musicdata.rate,
       comment: musicdata.comment
     }
@@ -79,7 +103,7 @@ const App = () => {
         setMusicData({
           id: res.data.id,
           title: res.data.tite,
-          genre: res.data.genre,
+          timing: res.data.timing,
           rate: res.data.rate,
           comment: res.data.comment
         })
@@ -105,12 +129,13 @@ const App = () => {
       })
   }
 
+
   const updateMusic = (id, cmt) => {
-    var data = {
+    let data = {
       comment: cmt
     };
     MusicDataService.update(id, data)
-      .then(response => {
+      .then(() => {
         setRefresh(refresh => refresh + 1);
         setEditOpened(false);
         refreshInput();
@@ -126,21 +151,24 @@ const App = () => {
         musics.length > 0 ?
           <TableContainer>
             <Table>
-              <TableRow style={{ backgroundColor: '#FFCA3D' }}>
+              <TableBody>
+              <TableRow style={{ backgroundColor: '#FF5733' }}>
                 <TableCell style={styles.tableAttribute}>제목</TableCell>
-                <TableCell style={styles.tableAttribute}>장르</TableCell>
+                <TableCell style={styles.tableAttribute}>언제?</TableCell>
                 <TableCell style={styles.tableAttribute}>별점</TableCell>
                 <TableCell style={styles.tableAttributeComment}>코멘트</TableCell>
               </TableRow>
+              </TableBody>
             </Table>
             {musics.map(m => {
               return (
                 <Table>
+                  <TableBody>
                   <TableRow>
-                    <TableCell style={styles.tableCell}>{m.title}</TableCell>
-                    <TableCell style={styles.tableCell}>{m.genre}</TableCell>
-                    <TableCell style={styles.tableCell}>{m.rate}</TableCell>
-                    <TableCell style={styles.tableCellComment}>{m.comment} <Button onClick={() => openEditModal(m.id)}>재평가</Button>
+                    <TableCell style={styles.tableCell}><div onPointerEnter={() => ispointed(m.id)} onPointerLeave={() => isnotpointed(m.id)} style={ispoint && m.id == checkid ? { fontSize: 27 } : { fontSize: 25 }}>{m.title} </div></TableCell>
+                    <TableCell style={styles.tableCell}><div key={m.id} style={{ fontSize: 25 }}>{m.timing}</div></TableCell>
+                    <TableCell style={styles.tableCell}><div key={m.id} style={{ fontSize: 25 }}>{m.rate}</div></TableCell>
+                    <TableCell style={styles.tableCellComment}>{m.comment}  이전평가 : {previousmusic}<Button color="primary" onClick={() => openEditModal(m.id)}>재평가</Button>
                       {editOpened === m.id ?
                         <div>
                           <TextField name="comment" value={musicdata.comment} onChange={handleInputChange} />
@@ -149,6 +177,7 @@ const App = () => {
                     </TableCell>
                     <TableCell align='right'><div onClick={() => { deleteMusic(m.id) }}><DeleteIcon fontSize='large' /></div></TableCell>
                   </TableRow>
+                  </TableBody>
                 </Table>
               )
             })}
@@ -161,7 +190,7 @@ const App = () => {
           <div style={{ marginLeft: 'auto' }} onClick={closeModal}><MdClear /></div></div>
         <div style={{ textAlign: 'center' }}>
           <div>제목 : <TextField name="title" value={musicdata.title} onChange={handleInputChange} /></div>
-          <div>장르 : <TextField name="genre" value={musicdata.genre} onChange={handleInputChange} /></div>
+          <div>언제? : <TextField name="timing" value={musicdata.timing} onChange={handleInputChange} /></div>
           <div>평점 : <TextField name="rate" value={musicdata.rate} onChange={handleInputChange} /></div>
           <div>코멘트 : <TextField name="comment" value={musicdata.comment} onChange={handleInputChange} /> </div>
           <Button onClick={addMusic}>저장</Button></div>
@@ -171,7 +200,6 @@ const App = () => {
 }
 
 const styles = {
-
   first: {
     textAlign: 'center',
     marginTop: '10%',
@@ -212,7 +240,6 @@ const styles = {
   tableCell: {
     width: '15%',
     textAlign: 'center',
-    fontSize: 25
   },
   tableCellComment: {
     width: '55%',
