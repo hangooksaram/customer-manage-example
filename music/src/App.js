@@ -7,12 +7,12 @@ import MusicDataService from './services/MusicService';
 import { Table, TableHead, TableCell, TableContainer, TableRow, Button, TableBody, TableFooter } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
 
-function usePrevious(data,value) {  //custom hook을 만들때는 use를 붙여야하는가..?
+function usePrevious(data,value) {  //custom hook을 만들때는 use를 붙여야하는가..
   const ref = useRef();
   console.log(data);
   useEffect(() => {
     ref.current = value;
-  },[data])
+  },[data]) //렌더링이 될때마다 실행이된다. 의존값인 data는 무쓸모인가
   return ref.current;
 }
 
