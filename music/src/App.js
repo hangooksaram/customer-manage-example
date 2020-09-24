@@ -7,13 +7,12 @@ import MusicDataService from './services/MusicService';
 import { Table, TableHead, TableCell, TableContainer, TableRow, Button, TableBody, TableFooter } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
 
-function usePrevious(data,value) {  //custom hook을 만들때는 use를 붙여야하는가..
+function usePrevious(value) {  //custom hook을 만들때는 use를 붙여야하는가..
   const ref = useRef();
-  console.log(data);
   useEffect(() => {
     ref.current = value;
-  },[data]) //렌더링이 될때마다 실행이된다. 의존값인 data는 무쓸모인가
-  return ref.current;
+  }, [value]) //렌더링이 될때마다 실행이된다. 의존값인 data는 무쓸모인가
+  return ref.current; //현재의 값이 저장이 됨..
 }
 
 const App = () => {
@@ -25,11 +24,11 @@ const App = () => {
 
   const ispointed = (id) => {
     setIsPoint(true);
-    setCheckId(id);
+    setCheckId(id)
   }
 
   const isnotpointed = (id) => {
-    setIsPoint(false)
+    setIsPoint(false);
     setCheckId(id);
   }
   useEffect(() => {
@@ -37,7 +36,7 @@ const App = () => {
   }, [refresh])
 
 
-  const previousmusic = usePrevious(musics.comment,musics.map(m=>m.comment));
+  const previousmusic = usePrevious(musics.map(m=>m.comment));
 
   const [isOpened, setIsOpened] = useState(false);
   const [editOpened, setEditOpened] = useState(false);
@@ -59,11 +58,11 @@ const App = () => {
     setIsOpened(false);
   }
 
-  const openEditModal = id => {
+  const openEditor = id => {
     setEditOpened(id);
   }
 
-  const closeEditModal = () => {
+  const closeEditor = () => {
     setEditOpened(false);
   }
 
@@ -147,7 +146,7 @@ const App = () => {
 
   return (
     <div>
-      {
+      {/*{
         musics.length > 0 ?
           <TableContainer>
             <Table>
@@ -183,7 +182,41 @@ const App = () => {
             })}
           </TableContainer>
           : <FirstPage />
-      }
+      }*/}
+
+      <Table>
+        <TableHead>
+              <TableRow style={{ backgroundColor: '#FF5733' }}>
+                <TableCell style={styles.tableAttribute}>제목</TableCell>
+                <TableCell style={styles.tableAttribute}>언제?</TableCell>
+                <TableCell style={styles.tableAttribute}>별점</TableCell>
+                <TableCell style={styles.tableAttributeComment}>코멘트</TableCell>
+              </TableRow>
+        </TableHead>
+        <TableBody>
+          {musics.map(m =>
+            <TableRow key= {m.id}>
+                <TableCell style={styles.tableCell}><div onPointerEnter = {()=> ispointed(m.id)} onPointerLeave = {() => isnotpointed(m.id)} style = {ispoint && m.id == checkid  ? {fontSize : 15} : null}>{m.title}</div></TableCell>
+                <TableCell style={styles.tableCell}>{m.timing}</TableCell>
+                <TableCell style={styles.tableCell}>{m.rate}</TableCell>
+                <TableCell style={styles.tableCell}>
+                  {m.comment}
+                  <Button color = "primary" onClick = {() => openEditor(m.id)}>재평가</Button>
+                  {
+                    editOpened === m.id ? 
+                    <div>
+                    <TextField name = "comment" value = {musicdata.comment} onChange = {handleInputChange}/> 
+                    <Button onClick = {() => updateMusic(m.id, musicdata.comment)}>저장</Button>
+                    </div>
+                    : null
+                  }                
+                </TableCell>
+            </TableRow>
+          )
+          }
+        </TableBody>
+      </Table>
+
       <div style={styles.icon}><Button onClick={openModal}><MdAdd size="125"></MdAdd></Button></div>
       <Modal ariaHideApp={false} style={styles.modalStyles} onRequestClose={closeModal} isOpen={isOpened}>
         <div style={{ display: 'flex' }}>
