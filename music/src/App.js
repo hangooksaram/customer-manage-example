@@ -201,7 +201,7 @@ const App = () => {
                 <TableCell style={styles.tableCell}>{m.rate}</TableCell>
                 <TableCell style={styles.tableCell}>
                   {m.comment}
-                  <Button color = "primary" onClick = {() => openEditor(m.id)}>재평가</Button>
+                  <Button color = "primary" onClick = {() => openEditor(m.id)}>재평가하자</Button>
                   {
                     editOpened === m.id ? 
                     <div>
