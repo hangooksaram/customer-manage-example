@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { MdAdd, MdClear } from "react-icons/md";
 import FirstPage from './components/FirstPage'
 import Modal from 'react-modal';
@@ -7,13 +7,22 @@ import MusicDataService from './services/MusicService';
 import { Table, TableHead, TableCell, TableContainer, TableRow, Button, TableBody, TableFooter } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
 
-function usePrevious(value) {  //custom hook을 만들때는 use를 붙여야하는가..
+/*function usePrevious(value) {  //custom hook을 만들때는 use를 붙여야하는가..
   const ref = useRef();
   useEffect(() => {
-    ref.current = value;
+    ref.current = value
   }, [value]) //렌더링이 될때마다 실행이된다. 의존값인 data는 무쓸모인가
   return ref.current; //현재의 값이 저장이 됨..
-}
+}*/
+
+/*function usePrevious(value) {
+  const ref = useRef();
+  useMemo(() => {
+    ref.current= value
+
+    return ref.current
+  }, [value])
+}*/
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -21,22 +30,25 @@ const App = () => {
   const [musics, setMusics] = useState([]);
   const [ispoint, setIsPoint] = useState(false);
   const [checkid, setCheckId] = useState(0);
+  const [previous, setPrevious] = useState('');
 
-  const ispointed = (id) => {
-    setIsPoint(true);
-    setCheckId(id)
+  const ispointed = () => {
+    //setIsPoint(true);
+
+    //setCheckId(id)
   }
 
-  const isnotpointed = (id) => {
-    setIsPoint(false);
-    setCheckId(id);
+  const isnotpointed = () => {
+   // setIsPoint(false);
+    //setCheckId(id);
   }
   useEffect(() => {
     retrieveMusics();
-  }, [refresh])
+  }, [refresh === 1])
 
 
-  const previousmusic = usePrevious(musics.map(m=>m.comment));
+  //const previousmusic = usePrevious(musics.map(m=>m.comment));
+  //console.log(previousmusic)
 
   const [isOpened, setIsOpened] = useState(false);
   const [editOpened, setEditOpened] = useState(false);
@@ -45,6 +57,7 @@ const App = () => {
     MusicDataService.getAll()
       .then(res => {
         setMusics(res.data);
+        console.log('what?') // 이부분이 재렌더링되는 것은 아님
       })
       .catch(e => {
         console.log(e)
@@ -107,6 +120,7 @@ const App = () => {
           comment: res.data.comment
         })
         setRefresh(refresh => refresh + 1);
+        setRefresh(0)
         refreshInput();
       }
       )
@@ -121,7 +135,9 @@ const App = () => {
   const deleteMusic = (id) => {
     MusicDataService.remove(id)
       .then(res => {
-        setRefresh(refresh => refresh - 1);
+        setRefresh(refresh => refresh + 1);
+        
+        setRefresh(0)
       })
       .catch(e => {
         console.log(e);
@@ -136,6 +152,7 @@ const App = () => {
     MusicDataService.update(id, data)
       .then(() => {
         setRefresh(refresh => refresh + 1);
+        setRefresh(0)
         setEditOpened(false);
         refreshInput();
       })
@@ -146,44 +163,7 @@ const App = () => {
 
   return (
     <div>
-      {/*{
-        musics.length > 0 ?
-          <TableContainer>
-            <Table>
-              <TableBody>
-              <TableRow style={{ backgroundColor: '#FF5733' }}>
-                <TableCell style={styles.tableAttribute}>제목</TableCell>
-                <TableCell style={styles.tableAttribute}>언제?</TableCell>
-                <TableCell style={styles.tableAttribute}>별점</TableCell>
-                <TableCell style={styles.tableAttributeComment}>코멘트</TableCell>
-              </TableRow>
-              </TableBody>
-            </Table>
-            {musics.map(m => {
-              return (
-                <Table>
-                  <TableBody>
-                  <TableRow>
-                    <TableCell style={styles.tableCell}><div onPointerEnter={() => ispointed(m.id)} onPointerLeave={() => isnotpointed(m.id)} style={ispoint && m.id == checkid ? { fontSize: 27 } : { fontSize: 25 }}>{m.title} </div></TableCell>
-                    <TableCell style={styles.tableCell}><div key={m.id} style={{ fontSize: 25 }}>{m.timing}</div></TableCell>
-                    <TableCell style={styles.tableCell}><div key={m.id} style={{ fontSize: 25 }}>{m.rate}</div></TableCell>
-                    <TableCell style={styles.tableCellComment}>{m.comment}  이전평가 : {previousmusic}<Button color="primary" onClick={() => openEditModal(m.id)}>재평가</Button>
-                      {editOpened === m.id ?
-                        <div>
-                          <TextField name="comment" value={musicdata.comment} onChange={handleInputChange} />
-                          <Button onClick={() => updateMusic(m.id, musicdata.comment)}>저장</Button></div> : null
-                      }
-                    </TableCell>
-                    <TableCell align='right'><div onClick={() => { deleteMusic(m.id) }}><DeleteIcon fontSize='large' /></div></TableCell>
-                  </TableRow>
-                  </TableBody>
-                </Table>
-              )
-            })}
-          </TableContainer>
-          : <FirstPage />
-      }*/}
-
+      {musics ? 
       <Table>
         <TableHead>
               <TableRow style={{ backgroundColor: '#FF5733' }}>
@@ -196,12 +176,12 @@ const App = () => {
         <TableBody>
           {musics.map(m =>
             <TableRow key= {m.id}>
-                <TableCell style={styles.tableCell}><div onPointerEnter = {()=> ispointed(m.id)} onPointerLeave = {() => isnotpointed(m.id)} style = {ispoint && m.id == checkid  ? {fontSize : 15} : null}>{m.title}</div></TableCell>
+                <TableCell style={styles.tableCell}><div onPointerEnter = {()=> ispointed()} onPointerLeave = {() => isnotpointed()} style = {ispoint == checkid  ? {fontSize : 15} : null}>{m.title}</div></TableCell>
                 <TableCell style={styles.tableCell}>{m.timing}</TableCell>
                 <TableCell style={styles.tableCell}>{m.rate}</TableCell>
                 <TableCell style={styles.tableCell}>
                   {m.comment}
-                  <Button color = "primary" onClick = {() => openEditor(m.id)}>재평가하자</Button>
+                  <Button color = "primary" onClick = {() => openEditor(m.id)}>재평가</Button>
                   {
                     editOpened === m.id ? 
                     <div>
@@ -211,11 +191,13 @@ const App = () => {
                     : null
                   }                
                 </TableCell>
+                <TableCell align='right'><div onClick={() => { deleteMusic(m.id) }}><DeleteIcon fontSize='large' /></div></TableCell>
             </TableRow>
           )
           }
         </TableBody>
-      </Table>
+      </Table> : <FirstPage/>
+      }
 
       <div style={styles.icon}><Button onClick={openModal}><MdAdd size="125"></MdAdd></Button></div>
       <Modal ariaHideApp={false} style={styles.modalStyles} onRequestClose={closeModal} isOpen={isOpened}>
