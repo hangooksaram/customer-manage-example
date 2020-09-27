@@ -7,48 +7,54 @@ import MusicDataService from './services/MusicService';
 import { Table, TableHead, TableCell, TableContainer, TableRow, Button, TableBody, TableFooter } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/DeleteForever';
 
-/*function usePrevious(value) {  //custom hook을 만들때는 use를 붙여야하는가..
+function usePrevious(updaterefresh, musics) {  //custom hook을 만들때는 use를 붙여야하는가..
   const ref = useRef();
+  const [predata, setPreData] = useState({id : '', pre : ''})
   useEffect(() => {
-    ref.current = value
-  }, [value]) //렌더링이 될때마다 실행이된다. 의존값인 data는 무쓸모인가
-  return ref.current; //현재의 값이 저장이 됨..
-}*/
+    ref.current = musics
+    ref.current.map(m=> 
+      setPreData({
+        id : m.id,
+        pre : m.comment
+      })
+      )
+  }, [updaterefresh]) //렌더링이 될때마다 실행이된다. 의존값인 data는 무쓸모인가
+  return predata; //현재의 값이 저장이 됨..
+}
 
 /*function usePrevious(value) {
   const ref = useRef();
   useMemo(() => {
     ref.current= value
-
     return ref.current
-  }, [value])
+  }, [ref.current])
 }*/
+
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [refresh, setRefresh] = useState(0);
+  const [updaterefresh, setUpdateRefresh] = useState(0);
   const [musics, setMusics] = useState([]);
   const [ispoint, setIsPoint] = useState(false);
   const [checkid, setCheckId] = useState(0);
   const [previous, setPrevious] = useState('');
-
-  const ispointed = () => {
-    //setIsPoint(true);
-
-    //setCheckId(id)
+  const ispointed = (id) => {
+    setIsPoint(true);
+    setCheckId(id);
   }
 
-  const isnotpointed = () => {
-   // setIsPoint(false);
-    //setCheckId(id);
+  const isnotpointed = (id) => {
+    setIsPoint(false);
+    setCheckId(id);
   }
   useEffect(() => {
     retrieveMusics();
   }, [refresh === 1])
 
 
-  //const previousmusic = usePrevious(musics.map(m=>m.comment));
-  //console.log(previousmusic)
+  const previousmusic = usePrevious(updaterefresh, musics);
+  console.log(previousmusic)
 
   const [isOpened, setIsOpened] = useState(false);
   const [editOpened, setEditOpened] = useState(false);
@@ -155,6 +161,9 @@ const App = () => {
         setRefresh(0)
         setEditOpened(false);
         refreshInput();
+        setUpdateRefresh(updaterefresh+2);
+        
+        setUpdateRefresh(0);
       })
       .catch(e => {
         console.log(e);
@@ -176,11 +185,12 @@ const App = () => {
         <TableBody>
           {musics.map(m =>
             <TableRow key= {m.id}>
-                <TableCell style={styles.tableCell}><div onPointerEnter = {()=> ispointed()} onPointerLeave = {() => isnotpointed()} style = {ispoint == checkid  ? {fontSize : 15} : null}>{m.title}</div></TableCell>
+                <TableCell style={styles.tableCell}><div onPointerEnter = {()=> ispointed(m.id)} onPointerLeave = {() => isnotpointed(m.id)} style = {ispoint && m.id == checkid ? {fontSize : 30} : {fontSize : 25}}>{m.title}</div></TableCell>
                 <TableCell style={styles.tableCell}>{m.timing}</TableCell>
                 <TableCell style={styles.tableCell}>{m.rate}</TableCell>
                 <TableCell style={styles.tableCell}>
                   {m.comment}
+                  이전평가 :  {m.id == previousmusic.id ? previousmusic.pre : null}
                   <Button color = "primary" onClick = {() => openEditor(m.id)}>재평가</Button>
                   {
                     editOpened === m.id ? 
@@ -189,12 +199,14 @@ const App = () => {
                     <Button onClick = {() => updateMusic(m.id, musicdata.comment)}>저장</Button>
                     </div>
                     : null
-                  }                
+                  }         
                 </TableCell>
+                
                 <TableCell align='right'><div onClick={() => { deleteMusic(m.id) }}><DeleteIcon fontSize='large' /></div></TableCell>
             </TableRow>
           )
           }
+          
         </TableBody>
       </Table> : <FirstPage/>
       }
@@ -255,6 +267,7 @@ const styles = {
   tableCell: {
     width: '15%',
     textAlign: 'center',
+    fontSize : 25
   },
   tableCellComment: {
     width: '55%',
