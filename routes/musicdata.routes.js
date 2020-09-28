@@ -8,7 +8,7 @@ module.exports = (app) => {
 
   router.get("/musicdatas", musicdatas.findAll);
 
-  router.get("/musicdata", musicdatas.findOne);
+  router.get("/musicdatas/:id", musicdatas.findOne);
 
   router.delete("/musicdatas/:id", musicdatas.delete);
 

@@ -25,4 +25,5 @@ export default {
   create,
   remove,
   update,
+  getOne,
 };
