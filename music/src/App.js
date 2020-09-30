@@ -30,6 +30,7 @@ function usePrevious(updaterefresh, musics) {  //custom hook을 만들때는 use
       )
   }, [updaterefresh]) //렌더링이 될때마다 실행이된다. 의존값인 data는 무쓸모인가
   return predata; //현재의 값이 저장이 됨..
+  //하지만 해당 선택된것이  row인지 식별 불가
 }*/
 
 /*function usePrevious(value) {
@@ -48,7 +49,13 @@ const App = () => {
   const [ispoint, setIsPoint] = useState(false);
   const [checkid, setCheckId] = useState(0);
   const [previous, setPrevious] = useState([
-    { id: "", title: "", timing: "", rate: 0, comment: "" },
+    {
+      id: null,
+      title: "",
+      timing: "",
+      rate: 0,
+      comment: "",
+    },
   ]);
   const ispointed = (id) => {
     setIsPoint(true);
@@ -80,12 +87,27 @@ const App = () => {
       });
   };
 
+  //id가 같으면, 수정하고
+  //id가 다르면, 더해준다
   const getOne = (id) => {
     MusicDataService.getOne(id)
       .then((res) => {
-        let predata = previous.concat(res.data); //concat으로 만들 수 있는가
-        setPrevious({ ...previous, predata });
-        console.log(res.data);
+        const predata = {
+          id: res.data.id,
+          title: res.data.title,
+          timing: res.data.timing,
+          rate: res.data.rate,
+          comment: res.data.comment,
+        };
+        {
+          previous.map((m) => {
+            m.id == id
+              ? setPrevious({ ...previous, comment: predata.comment })
+              : setPrevious(previous.concat(predata));
+          });
+        }
+
+        console.log(previous);
       })
       .catch((e) => {
         console.log(e);
@@ -198,6 +220,7 @@ const App = () => {
         <Table>
           <TableHead>
             <TableRow style={{ backgroundColor: "#FF5733" }}>
+              <TableCell style={styles.tableAttribute}>ID</TableCell>
               <TableCell style={styles.tableAttribute}>제목</TableCell>
               <TableCell style={styles.tableAttribute}>언제?</TableCell>
               <TableCell style={styles.tableAttribute}>별점</TableCell>
@@ -207,6 +230,7 @@ const App = () => {
           <TableBody>
             {musics.map((m) => (
               <TableRow key={m.id}>
+                <TableCell style={styles.tableCell}>{m.id}</TableCell>
                 <TableCell style={styles.tableCell}>
                   <div
                     onPointerEnter={() => ispointed(m.id)}
@@ -224,7 +248,7 @@ const App = () => {
                 <TableCell style={styles.tableCell}>{m.rate}</TableCell>
                 <TableCell style={styles.tableCell}>
                   {m.comment}
-                  이전평가 : {previous.id == m.id ? previous.comment : null}
+                  이전평가 : {previous.comment}
                   <Button color="primary" onClick={() => openEditor(m.id)}>
                     재평가
                   </Button>
@@ -279,7 +303,7 @@ const App = () => {
         </div>
         <div style={{ textAlign: "center" }}>
           <div>
-            제목 :{" "}
+            제목 :
             <TextField
               name="title"
               value={musicdata.title}
@@ -287,7 +311,7 @@ const App = () => {
             />
           </div>
           <div>
-            언제? :{" "}
+            언제? :
             <TextField
               name="timing"
               value={musicdata.timing}
@@ -295,7 +319,7 @@ const App = () => {
             />
           </div>
           <div>
-            평점 :{" "}
+            평점 :
             <TextField
               name="rate"
               value={musicdata.rate}
@@ -303,12 +327,12 @@ const App = () => {
             />
           </div>
           <div>
-            코멘트 :{" "}
+            코멘트 :
             <TextField
               name="comment"
               value={musicdata.comment}
               onChange={handleInputChange}
-            />{" "}
+            />
           </div>
           <Button onClick={addMusic}>저장</Button>
         </div>
