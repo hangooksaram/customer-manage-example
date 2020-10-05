@@ -99,15 +99,7 @@ const App = () => {
           rate: res.data.rate,
           comment: res.data.comment,
         };
-        {
-          previous.map((m) => {
-            m.id == id
-              ? setPrevious({ ...previous, comment: predata.comment })
-              : setPrevious(previous.concat(predata));
-          });
-        }
-
-        console.log(previous);
+        console.log(predata);
       })
       .catch((e) => {
         console.log(e);
@@ -124,6 +116,8 @@ const App = () => {
 
   const openEditor = (id) => {
     setEditOpened(id);
+
+    getOne(id);
   };
 
   const closeEditor = () => {
@@ -198,7 +192,6 @@ const App = () => {
     let data = {
       comment: cmt,
     };
-    getOne(id);
     MusicDataService.update(id, data)
       .then(() => {
         setRefresh((refresh) => refresh + 1);
