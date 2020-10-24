@@ -49,7 +49,7 @@ const MainPage = () => {
   const [musics, setMusics] = useState([]);
   const [ispoint, setIsPoint] = useState(false);
   const [checkid, setCheckId] = useState(0);
-  const [previous, setPrevious] = useState([{}]);
+  const [previous, setPrevious] = useState([]);
   const ispointed = (id) => {                     
     setIsPoint(true);
     setCheckId(id);
@@ -84,31 +84,24 @@ const MainPage = () => {
   //id가 다르면, 더해준다
   const getOne = (id) => {
     MusicDataService.getOne(id)
-      .then((res) => {
+      .then((result) => {
         const predata = {
-          id: res.data.id,
-          title: res.data.title,
-          timing: res.data.timing,
-          rate: res.data.rate,
-          comment: res.data.comment,
+          id: result.data.id,
+          title: result.data.title,
+          timing: result.data.timing,
+          rate: result.data.rate,
+          comment: result.data.comment,
         };
         return predata;
       })
-      .then((data) => {        
-        previous.map((m) => {
-            if (m.id == data.id) {            
-            //  setPrevious({ ...previous, comment: data.comment });    
-            // 위의 부분은 {}로 감싸져 있기 때문에 preivous 배열을 {}객체형으로 다시 바꿔서
-            // 그 previous.map is not a function 이라는 에러가 계속 뜬게 아닐까?        
-            setPrevious(previous => [...previous, data.comment]);
-            console.log("second");
-          } else {
-            // id가 같지 않는 부분에도 data가 concat 되고 있다. 이부분을 어떻게 해결 할 것인가...
-            console.log(data);
-            setPrevious(previous => previous.concat(data));
-            console.log("third");
-          }
-        });
+      .then((predata)=>{
+        if(previous.map(p=> p.id == undefined)) {
+          console.log('this is undefined');
+          setPrevious(previous => previous.concat(predata));
+        }
+        else if(previous.map(p=> p.id == id)){
+          console.log('this is same');
+        }
         console.log(previous);
       })
       .catch((e) => {
@@ -188,7 +181,6 @@ const MainPage = () => {
     MusicDataService.remove(id)
       .then((res) => {
         setRefresh((refresh) => refresh + 1);
-
         setRefresh(0);
       })
       .catch((e) => {
@@ -207,15 +199,17 @@ const MainPage = () => {
         setEditOpened(false);
         refreshInput();
         setUpdateRefresh(updaterefresh + 2);
-
+        setUpdateRefresh(0);        
         getOne(id);
-        setUpdateRefresh(0);
-      })
+      }) 
       .catch((e) => {
         console.log(e);
       });
   };
 
+  function test(){
+    
+  }
 
   return (
     <div>

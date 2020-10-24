@@ -4,12 +4,10 @@ import styled from 'styled-components';
 import { makeStyles, MuiThemeProvider } from '@material-ui/core/styles';
 import {ThemeProvider} from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
-
-import {Wrapper, Title, textStyle} from '../src/css/mainpage-css'
+import theme from './styles/theme'
+import {Wrapper, Title, textStyle} from './styles/mainpage-css'
 
 import ThemePractice from './components/themepractice';
-
-const theme = {backgroundColor:'green'}
 
 const useStyles = makeStyles ((theme) => ({
   root : {
@@ -64,7 +62,7 @@ const App = () => {
         <ThemePractice/>
       </ThemeProvider>
     </div>*/
-    <MuiThemeProvider>
+    <MuiThemeProvider theme={theme}>
       <MainPage/>
     </MuiThemeProvider>
   )
