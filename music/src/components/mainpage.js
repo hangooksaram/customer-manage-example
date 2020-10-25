@@ -95,14 +95,15 @@ const MainPage = () => {
         return predata;
       })
       .then((predata)=>{
-        if(previous.map(p=> p.id == undefined)) {
-          console.log('this is undefined');
+        if(previous.length===0) {                          //처음에 데이터가 하나도 없을때
+          console.log('first')
           setPrevious(previous => previous.concat(predata));
         }
-        else if(previous.map(p=> p.id == id)){
-          console.log('this is same');
+        else {
+          let sameid = previous.find(p => p.id === predata.id)
+          if(sameid)
+          console.log('same');
         }
-        console.log(previous);
       })
       .catch((e) => {
         console.log(e);
