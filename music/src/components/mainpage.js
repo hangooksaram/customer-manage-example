@@ -94,16 +94,17 @@ const MainPage = () => {
         };
         return predata;
       })
-      .then((predata)=>{
+      .then((predata)=>{        
+        let sameid = previous.find(p => p.id === predata.id)
         if(previous.length===0) {                          //처음에 데이터가 하나도 없을때         
-          setPrevious(previous => previous.concat(predata));        
-        }
-        else if(previous.map(p=> p.id !== predata.id)) {
           setPrevious(previous => previous.concat(predata));
         }
-        else {
-          let sameid = previous.find(p => p.id === predata.id)
-          console.log(sameid.id)
+        else if(!sameid) {
+          setPrevious(previous => previous.concat(predata));
+          console.log('second')    
+        }
+        else if(sameid){
+          setPrevious(previous => previous.)
         }
       })
       .catch((e) => {
