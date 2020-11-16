@@ -104,7 +104,8 @@ const MainPage = () => {
           console.log('second')    
         }
         else if(sameid){
-          setPrevious(previous => previous.)
+          //setPrevious(previous => previous.)
+          //how?
         }
       })
       .catch((e) => {
