@@ -44,12 +44,15 @@ function usePrevious(updaterefresh, musics) {  //custom hook을 만들때는 use
 
 const MainPage = () => {
   const [isLoading, setIsLoading] = useState(false);
+  
   const [refresh, setRefresh] = useState(0);
   const [updaterefresh, setUpdateRefresh] = useState(0);
   const [musics, setMusics] = useState([]);
   const [ispoint, setIsPoint] = useState(false);
   const [checkid, setCheckId] = useState(0);
   const [previous, setPrevious] = useState([]);
+  const [test, setTest] = useState([]);
+  let testword= ""; 
   const ispointed = (id) => {                     
     setIsPoint(true);
     setCheckId(id);
@@ -96,14 +99,18 @@ const MainPage = () => {
       })
       .then((predata)=>{        
         let sameid = previous.find(p => p.id === predata.id)
-        if(previous.length===0) {                          //처음에 데이터가 하나도 없을때         
-          setPrevious(previous => previous.concat(predata));
-        }
-        else if(!sameid) {
-          setPrevious(previous => previous.concat(predata));
-          console.log('second')    
+        // if(previous.length===0) {                          //처음에 데이터가 하나도 없을때         
+        //   setPrevious([{...previous, predata}]);           //이부분은 필요 없을 듯
+        //   console.log('first')
+        // }
+        // else 
+        if(!sameid) {
+          console.log(predata)
+          setPrevious(previous => previous.concat(predata)); 
+          console.log('second')
         }
         else if(sameid){
+          setPrevious(previous => previous.concat(predata)); 
           //setPrevious(previous => previous.)
           //how?
         }
@@ -211,12 +218,16 @@ const MainPage = () => {
       });
   };
 
-  function test(){
-    
+  const onChangeTest = (e)=> {
+    setTest(test => test.concat(e.target.value));
+    console.log(test)
   }
 
   return (
     <div>
+      <div>
+        <TextField name="test" value={testword} onChange={onChangeTest}/>
+      </div>
       {musics ? (
         <Table>
           <TableHead>
@@ -229,7 +240,7 @@ const MainPage = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {musics.map((m) => (
+            {musics.map((m, index) => (
               <TableRow key={m.id}>
                 <TableCell style={styles.tableCell}>{m.id}</TableCell>
                 <TableCell style={styles.tableCell}>
@@ -249,7 +260,7 @@ const MainPage = () => {
                 <TableCell style={styles.tableCell}>{m.rate}</TableCell>
                 <TableCell style={styles.tableCell}>
                   {m.comment}
-                  이전평가 : {previous.comment}
+                  이전평가 : {previous[index] ? previous[index].comment : ""}
                   <Button color="primary" onClick={() => openEditor(m.id)}>
                     재평가
                   </Button>
@@ -324,7 +335,7 @@ const MainPage = () => {
             <TextField
               name="rate"
               value={musicdata.rate}
-              onChange={handleInputChange}
+              onChange={handleInputChange}              
             />
           </div>
           <div>
