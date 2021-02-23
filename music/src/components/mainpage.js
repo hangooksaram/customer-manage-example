@@ -99,11 +99,6 @@ const MainPage = () => {
       })
       .then((predata)=>{        
         let sameid = previous.find(p => p.id === predata.id)
-        // if(previous.length===0) {                          //처음에 데이터가 하나도 없을때         
-        //   setPrevious([{...previous, predata}]);           //이부분은 필요 없을 듯
-        //   console.log('first')
-        // }
-        // else 
         if(!sameid) {
           console.log(predata)
           setPrevious(previous => previous.concat(predata)); 
@@ -111,8 +106,6 @@ const MainPage = () => {
         }
         else if(sameid){
           setPrevious(previous => previous.concat(predata)); 
-          //setPrevious(previous => previous.)
-          //how?
         }
       })
       .catch((e) => {
@@ -260,7 +253,7 @@ const MainPage = () => {
                 <TableCell style={styles.tableCell}>{m.rate}</TableCell>
                 <TableCell style={styles.tableCell}>
                   {m.comment}
-                  이전평가 : {previous[index] ? previous[index].comment : ""}
+                  이전평가 : {previous[index] && previous[index].id === m.id ? previous[index].comment : ""}
                   <Button color="primary" onClick={() => openEditor(m.id)}>
                     재평가
                   </Button>
