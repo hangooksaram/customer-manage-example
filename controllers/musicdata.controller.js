@@ -16,6 +16,7 @@ exports.create = (req, res) => {
     timing: req.body.timing,
     rate: req.body.rate,
     comment: req.body.comment,
+    link: req.body.link,
   };
 
   Musicdata.create(musicdata)

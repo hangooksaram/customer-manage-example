@@ -1,29 +1,35 @@
-import http from "../http-common";
+import axios from "axios";
+const EXP_URL = "http://localhost:5000";
 
-const getAll = () => {
-  return http.get("/musicdatas");
+const getAll = async () => {
+  const result = await axios.get(`${EXP_URL}/musicdatas`);
+  const data = await result.data;
+  return data;
 };
 
-const getOne = (id) => {
-  return http.get(`/musicdatas/${id}`);
+const getOne = async (id) => {
+  const result = await axios.get(`${EXP_URL}/musicdatas/${id}`);
+  const data = await result.data;
+  console.log(data);
+  return data;
 };
 
-const create = (data) => {
-  return http.post("/musicdatas", data);
+const create = async (music) => {
+  const result = await axios.post(`${EXP_URL}/musicdatas`, music);
+  const data = await result.data;
+  return data;
 };
 
-const remove = (id) => {
-  return http.delete(`/musicdatas/${id}`);
+const remove = async (id) => {
+  const result = await axios.delete(`${EXP_URL}/musicdatas/${id}`);
+  const data = await result.data;
+  return data;
 };
 
-const update = (id, data) => {
-  return http.put(`/musicdatas/${id}`, data);
+const update = async (id, music) => {
+  const result = await axios.delete(`${EXP_URL}/musicdatas/${id}`, music);
+  const data = await result.data;
+  return data;
 };
 
-export default {
-  getAll,
-  create,
-  remove,
-  update,
-  getOne,
-};
+export { getAll, create, remove, update, getOne };
