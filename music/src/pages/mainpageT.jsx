@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, } from "react";
 import { Button, Typography } from "@material-ui/core";
 import { MdAdd } from "react-icons/md";
 import DeleteIcon from "@material-ui/icons/DeleteForever";
+import SearchIcon from "@material-ui/icons/Search";
 import AddMusicForm from "./../components/AddMusicForm";
 import {
   Table,
@@ -11,36 +12,27 @@ import {
   TableBody,
   Paper,
   Popover,
+  Grid,
 } from "@material-ui/core";
-
-import { getAll, remove } from "../services/MusicService";
-import tableStyle from "../styles/tableStyle";
-import TodayMusic from "./../components/TodayMusic";
+import ReactPlayer from "react-player";
+import { getAll, remove, getOne } from "../services/MusicService";
+import gridStyle from "../styles/gridStyle";
 import popOverStyle from "../styles/popOverStyle";
+import MusicPlayer from "./../components/MusicPlayer";
+import Rating from '@material-ui/lab/Rating';
+import StarIcon from '@material-ui/icons/Star';
+import MusicList from './../components/MusicList';
 
 const MainPageT = () => {
   const [musics, setMusics] = useState([]);
+  const [link, setLink] = useState("");
   const [refresh, setRefresh] = useState(0);
-  const table = tableStyle();
+  const grid = gridStyle();
   const popover = popOverStyle();
   useEffect(() => {
     getAll().then((music) => setMusics(music));
   }, [refresh]);
   const [open, setOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const handleClickTitle =(link)=>{
-    
-  }
-  const handlePopoverOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handlePopoverClose = () => {
-    setAnchorEl(null);
-  };
-
-  const popOverOpen = Boolean(anchorEl);
 
   const openModal = () => {
     setOpen(true);
@@ -48,79 +40,45 @@ const MainPageT = () => {
   const closeModal = () => {
     setOpen(false);
   };
-  const handleClickIcon = async (id) => {
+  const handleClickDeleteIcon = async (id) => {
     remove(id).then(() => {
       setRefresh((rf) => rf + 1);
     });
   };
+
+  const handleClickDetailIcon = (id) => {
+    
+    getOne(id).then(res=>console.log(res));
+  }
+  const handleClickLink = (link) => {
+    setLink(link);
+  };
+
+  const rateColor = [
+    {
+      rate : 1,
+      color : '#F7F3FF'
+    },
+    {
+      rate : 2,
+      color : '#F2EBFF'
+    },
+    {
+      rate : 3,
+      color : '#EEE4FF'
+    },
+    {
+      rate : 4,
+      color : '#E8DAFF'
+    },
+    {
+      rate : 5,
+      color : '#E1CEFF'
+    }
+  ]
   return (
     <React.Fragment>
-      <TodayMusic />
-      <Paper elevation={3} className={table.root}>
-        <Table>
-          <TableHead className={table.head}>
-            <TableRow>
-              <TableCell>제목</TableCell>
-              <TableCell>언제?</TableCell>
-              <TableCell>평점</TableCell>
-              <TableCell>한줄평</TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {musics.map((music) => {
-              return (
-                <TableRow className={table.body} key={`key_${music.id}`}>
-                  <TableCell>
-                    <Typography
-                      aria-owns={open ? "mouse-over-popover" : undefined}
-                      aria-haspopup="true"
-                      onMouseEnter={handlePopoverOpen}
-                      onMouseLeave={handlePopoverClose}
-                      onClick={() => handleClickTitle(music.link)}
-                    >
-                      {music.title}
-                    </Typography>
-                  </TableCell>
-                  <Popover
-                    id="mouse-over-popover"
-                    className={popover.popover}
-                    open={popOverOpen}
-                    classes={{
-                      paper: popover.paper,
-                    }}
-                    anchorEl={anchorEl}
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "left",
-                    }}
-                    transformOrigin={{
-                      vertical: "top",
-                      horizontal: "left",
-                    }}
-                    onClose={handlePopoverClose}
-                    disableRestoreFocus
-                  >
-                    <Typography>링크 타려면 클릭!</Typography>
-                  </Popover>
-                  <TableCell>{music.timing}</TableCell>
-                  <TableCell>{music.rate}</TableCell>
-                  <TableCell>{music.comment}</TableCell>
-                  <TableCell>
-                    <DeleteIcon
-                      onClick={() => handleClickIcon(music.id)}
-                      className={table.icon}
-                    />
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </Paper>
-      <Button onClick={openModal}>
-        <MdAdd size="125"></MdAdd>
-      </Button>
+      <MusicList/>
       <AddMusicForm
         refresh={refresh}
         setRefresh={setRefresh}

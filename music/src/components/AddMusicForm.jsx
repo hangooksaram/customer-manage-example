@@ -10,6 +10,8 @@ import {
 } from "@material-ui/core";
 import modalStyle from "../styles/modalStyle";
 import { create } from "../services/MusicService";
+import Rating from '@material-ui/lab/Rating';
+import StarIcon from '@material-ui/icons/Star';
 
 const initialState = {
   id: null,
@@ -24,8 +26,9 @@ const AddMusicForm = ({ refresh, setRefresh, open, closeModal }) => {
   const { register, handleSubmit, watch, errors } = useForm();
   const modal = modalStyle();
   const [formdata, setFormData] = useState(initialState);
-  const onSubmit = (data) => {
+  const onSubmit = (data) => {    
     data.id = null;
+    data.rate = formdata.rate;
     create(data).then(() => {
       if (refresh > 100) setRefresh(0);
       else setRefresh((rf) => rf + 1);
@@ -70,13 +73,11 @@ const AddMusicForm = ({ refresh, setRefresh, open, closeModal }) => {
             value={formdata.timing}
             onChange={handleChange}
           />
-          <TextField
-            autoComplete={false}
-            variant="outlined"
-            placeholder="평점"
+          <Rating                                    
             id="rate"
             name="rate"
-            inputRef={register}
+            //inputRef={register}
+            icon={<StarIcon fontSize="inherit" />} 
             value={formdata.rate}
             onChange={handleChange}
           />

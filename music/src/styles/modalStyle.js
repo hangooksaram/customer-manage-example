@@ -7,8 +7,8 @@ export default makeStyles((theme) => ({
     justifyContent: "center",
   },
   container: {
-    width: "50%",
-    height: "70%",
+    width: "25%",
+    height: "60%",
     paddingTop: "5%",
   },
   content: {
