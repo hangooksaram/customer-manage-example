@@ -17,6 +17,7 @@ export default makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
     flexWrap: "wrap",
+    boxShadow: `5px 5px 5px ${theme.palette.primary.main}`,
   },
   playing: {
     width: "100%",
@@ -25,7 +26,17 @@ export default makeStyles((theme) => ({
     justifyContent: "center",
     alignItems: "center",
     flexWrap: "wrap",
-    backgroundColor: "#F7F3FF",
+    backgroundColor: theme.palette.primary.light,
+    boxShadow: `5px 5px 5px ${theme.palette.primary.dark}`,
+  },
+  detail: {
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexWrap: "wrap",
+    boxShadow: `5px 5px 5px ${theme.palette.primary.dark}`,
   },
   link: {
     "&:hover": {

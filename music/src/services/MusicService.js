@@ -27,7 +27,7 @@ const remove = async (id) => {
 };
 
 const update = async (id, music) => {
-  const result = await axios.delete(`${EXP_URL}/musicdatas/${id}`, music);
+  const result = await axios.put(`${EXP_URL}/musicdatas/${id}`, music);
   const data = await result.data;
   return data;
 };

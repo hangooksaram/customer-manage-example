@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Typography } from "@material-ui/core";
+import { Button, Grow, Typography } from "@material-ui/core";
 import { MdAdd } from "react-icons/md";
 import DeleteIcon from "@material-ui/icons/DeleteForever";
 import SearchIcon from "@material-ui/icons/Search";
@@ -10,7 +10,10 @@ import gridStyle from "../styles/gridStyle";
 import MusicPlayer from "./../components/MusicPlayer";
 import Rating from "@material-ui/lab/Rating";
 import StarIcon from "@material-ui/icons/Star";
-
+//import {BroweRouter as Router, Route} from 'react-router-dom';
+import MusicDetail from './../pages/musicdetail';
+import UpdateIcon from '@material-ui/icons/Update';
+import MusicUpdate from './../pages/musicupdate';
 
 const useStyles = makeStyles((props)=>({
 
@@ -19,6 +22,8 @@ const useStyles = makeStyles((props)=>({
 const MusicList = () => {
   const [musics, setMusics] = useState([]);
   const [link, setLink] = useState("");
+  const [detail, setDetail] = useState(0);
+  const [update, setUpdate] = useState(0);
   const [refresh, setRefresh] = useState(0);
   const grid = gridStyle();
   useEffect(() => {
@@ -29,6 +34,9 @@ const MusicList = () => {
       setRefresh((rf) => rf + 1);
     });
   };
+  const handleClickUpdateIcon = (id)=> {
+    setUpdate(id);
+  }
   const [open, setOpen] = useState(false);
 
   const openModal = () => {
@@ -39,44 +47,24 @@ const MusicList = () => {
   };
   const handleClickDetailIcon = (id) => {
     getOne(id).then((res) => console.log(res));
+    setDetail(id);
   };
   const handleClickLink = (link) => {
     setLink(link);
   };
 
-  const rateColor = [
-    {
-      rate: 1,
-      color: "#F7F3FF",
-    },
-    {
-      rate: 2,
-      color: "#F2EBFF",
-    },
-    {
-      rate: 3,
-      color: "#EEE4FF",
-    },
-    {
-      rate: 4,
-      color: "#E8DAFF",
-    },
-    {
-      rate: 5,
-      color: "#E1CEFF",
-    },
-  ];
   return (
     <React.Fragment>
       <MusicPlayer link={link} />
       <Grid className={grid.root} container spacing={4}>
-        {musics.map((music) => {
+        {musics.map((music, index) => {
           return (
+            <Grow in={true}>
             <Grid className={grid.container} item xs={2} sm={4}>
+              {detail === music.id ?  <MusicDetail setDetail={setDetail} id={music.id}/> : 
+              update === music.id ? 
+              <MusicUpdate setRefresh={setRefresh} setUpdate={setUpdate} music={music}/>:
               <Paper
-                style={{
-                  boxShadow: `5px 5px 5px ${rateColor[music.rate - 1].color}`,
-                }}
                 variant="outlined"
                 square
                 className={link === music.link ? grid.playing: grid.paper}
@@ -102,23 +90,30 @@ const MusicList = () => {
                       readOnly
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={4}>
                     <DeleteIcon
                       onClick={() => handleClickDeleteIcon(music.id)}
                       className={grid.icon}
                     />
                   </Grid>
-                  <Grid item xs={6}>
+                  <Grid item xs={4}>
+                    <UpdateIcon
+                      onClick={() => handleClickUpdateIcon(music.id)}
+                    />
+                  </Grid>
+                  <Grid item xs={4}>
                     <SearchIcon
                       onClick={() => handleClickDetailIcon(music.id)}
-                    ></SearchIcon>
+                    ></SearchIcon>                    
                   </Grid>
                   <Grid item xs={12}>
                       {link === music.link ? <Typography>playing</Typography> : ""}
                   </Grid>
                 </Grid>
-              </Paper>
+              </Paper>}
+              
             </Grid>
+            </Grow>
           );
         })}
         <Grid item xs={2}>

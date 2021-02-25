@@ -53,6 +53,14 @@ const AddMusicForm = ({ refresh, setRefresh, open, closeModal }) => {
     >
       <Paper className={modal.container}>
         <form className={modal.content} onSubmit={handleSubmit(onSubmit)}>
+          <Rating                                    
+            id="rate"
+            name="rate"
+            //inputRef={register}
+            icon={<StarIcon fontSize="inherit" />} 
+            value={formdata.rate}
+            onChange={handleChange}
+          />
           <TextField
             autoComplete={false}
             variant="outlined"
@@ -73,14 +81,7 @@ const AddMusicForm = ({ refresh, setRefresh, open, closeModal }) => {
             value={formdata.timing}
             onChange={handleChange}
           />
-          <Rating                                    
-            id="rate"
-            name="rate"
-            //inputRef={register}
-            icon={<StarIcon fontSize="inherit" />} 
-            value={formdata.rate}
-            onChange={handleChange}
-          />
+          
           <TextField
             autoComplete={false}
             variant="outlined"
