@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { TextField, Button, Snackbar, Slide } from "@material-ui/core";
+import { TextField, IconButton,Snackbar, Slide } from "@material-ui/core";
 import Rating from "@material-ui/lab/Rating";
 import StarIcon from "@material-ui/icons/Star";
-import { update } from "../services/MusicService";
-import Alert from "@material-ui/lab/Alert";
-import updateStyle from "../styles/updateStyle";
+import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
+import { update } from "../api/MusicService";
+import updatePageStyle from "../styles/updatePageStyle";
 
 const initialState = {
   timing: "",
@@ -15,11 +15,11 @@ const initialState = {
 
 const UpdateMusicForm = ({ setRefresh, music }) => {
   const { timing, rate, comment } = music;
-  const updates = updateStyle();
+  const updates = updatePageStyle();
   const [open, setOpen] = useState(false);
-  const { register, handleSubmit, watch, errors } = useForm();
+  const { register, handleSubmit } = useForm();
   const [formdata, setFormData] = useState(initialState);
-  
+
   useEffect(() => {
     setFormData({ ...formdata, timing: timing, rate: rate, comment: comment });
   }, []);
@@ -33,7 +33,7 @@ const UpdateMusicForm = ({ setRefresh, music }) => {
 
     setOpen(false);
   };
-const onSubmit = (data) => {
+  const onSubmit = (data) => {
     data.rate = formdata.rate;
     update(music.id, data).then(() => {
       setRefresh((rf) => rf + 1);
@@ -42,10 +42,18 @@ const onSubmit = (data) => {
   };
   return (
     <React.Fragment>
-      <Snackbar message="재평가 완료!" ContentProps={{
-          className : updates.snackbar
-        }} TransitionComponent={Slide} anchorOrigin={{vertical : "bottom", horizontal : "left"}} open={open} autoHideDuration={1000} onClose={handleClose}/>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <Snackbar
+        message="재평가 완료!"
+        ContentProps={{
+          className: updates.snackbar,
+        }}
+        TransitionComponent={Slide}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        open={open}
+        autoHideDuration={1000}
+        onClose={handleClose}
+      />
+      <form className={updates.content} onSubmit={handleSubmit(onSubmit)}>
         <Rating
           id="rate"
           name="rate"
@@ -54,25 +62,24 @@ const onSubmit = (data) => {
           onChange={handleChange}
         />
         <TextField
-          variant="outlined"
-          placeholder="언제?"
           id="timing"
           name="timing"
+          variant="outlined"
+          label="언제?"
           inputRef={register}
           value={formdata.timing}
           onChange={handleChange}
         />
-
         <TextField
-          variant="outlined"
-          placeholder="한줄평"
           id="comment"
           name="comment"
+          variant="outlined"
+          label="한줄평"
           inputRef={register}
           value={formdata.comment}
           onChange={handleChange}
         />
-        <Button type="submit">확인</Button>
+        <IconButton type="submit"><DoneOutlineIcon/></IconButton>
       </form>
     </React.Fragment>
   );

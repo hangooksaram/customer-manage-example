@@ -1,23 +1,21 @@
-import { makeStyles, theme } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 
 export default makeStyles((theme) => ({
   root: {
+    width: "100%",
+    height: "100%",
     display: "flex",
-    alignItems: "center",
     justifyContent: "center",
-  },
-  container: {
-    width: "25%",
-    height: "60%",
-    paddingTop: "5%",
+    alignItems: "center",
+    flexWrap: "wrap",
+    boxShadow: `5px 5px 5px ${theme.palette.primary.dark}`,
   },
   content: {
-    justifyContent: "center",
-    alignItems: "center",
+    width: "80%",
     display: "flex",
     flexDirection: "column",
-    height: "70%",
-    padding: "11% 3%",
+    justifyContent: "center",
+    alignItems: "center",
     "& .MuiTextField-root": {
       margin: theme.spacing(1),
       width: "25ch",
