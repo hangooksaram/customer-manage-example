@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core";
 
-export default makeStyles(() => ({
+export default makeStyles((theme) => ({
   root: {
     position: "fixed",
     zIndex: 1,
@@ -12,20 +12,32 @@ export default makeStyles(() => ({
     alignItems: "center",
     padding: "0% 10%",
   },
-  box: {
-    overflow: "hidden",
-    width: "100%",
+  playingContainer: {
+    display: "flex",
+    justifyContent: "center",
+    borderRadius: "5%",
+    boxShadow: `0px 0px 20px ${theme.palette.primary.dark}`,
   },
   playing: {
-    animation: `$playing-anime 4s infinite ease-in`,
+    animation: `$playing-anime 4s infinite ease-in-out`,
+    marginLetf: "2%",
     cursor: "default",
     fontSize: "1em",
-    overflow: "hidden",
+  },
+  notPlaying: {
+    marginLetf: "10%",
+    cursor: "default",
+    fontSize: "1em",
   },
   "@keyframes playing-anime": {
-    "0%": {},
+    "0%": {
+      transform: "translate(-20px)",
+    },
+    "50%": {
+      transform: "translate(40px)",
+    },
     "100%": {
-      transform: "translate(500px)",
+      transform: "translate(-20px)",
     },
   },
 }));

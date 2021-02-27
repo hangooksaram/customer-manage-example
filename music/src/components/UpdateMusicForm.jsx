@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { TextField, IconButton,Snackbar, Slide } from "@material-ui/core";
+import { TextField, IconButton, Snackbar, Slide } from "@material-ui/core";
 import Rating from "@material-ui/lab/Rating";
 import StarIcon from "@material-ui/icons/Star";
-import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
+import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
 import { update } from "../api/MusicService";
 import updatePageStyle from "../styles/updatePageStyle";
+import { Favorite, FavoriteBorder } from "@material-ui/icons";
 
 const initialState = {
   timing: "",
@@ -57,7 +58,9 @@ const UpdateMusicForm = ({ setRefresh, music }) => {
         <Rating
           id="rate"
           name="rate"
-          icon={<StarIcon fontSize="inherit" />}
+          precision={0.5}
+          icon={<Favorite color="secondary" fontSize="inherit" />}
+          emptyIcon={<FavoriteBorder color="secondary" />}
           value={formdata.rate}
           onChange={handleChange}
         />
@@ -66,6 +69,8 @@ const UpdateMusicForm = ({ setRefresh, music }) => {
           name="timing"
           variant="outlined"
           label="언제?"
+          required
+          autoComplete="off"
           inputRef={register}
           value={formdata.timing}
           onChange={handleChange}
@@ -75,11 +80,15 @@ const UpdateMusicForm = ({ setRefresh, music }) => {
           name="comment"
           variant="outlined"
           label="한줄평"
+          required
+          autoComplete="off"
           inputRef={register}
           value={formdata.comment}
           onChange={handleChange}
         />
-        <IconButton type="submit"><DoneOutlineIcon/></IconButton>
+        <IconButton type="submit">
+          <DoneOutlineIcon />
+        </IconButton>
       </form>
     </React.Fragment>
   );

@@ -1,12 +1,20 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { TextField, IconButton, Paper, Modal, Backdrop, InputAdornment, Tooltip } from "@material-ui/core";
+import {
+  TextField,
+  IconButton,
+  Paper,
+  Modal,
+  Backdrop,
+  InputAdornment,
+  Tooltip,
+} from "@material-ui/core";
 import addModalStyle from "../styles/addModalStyle";
 import { create } from "../api/MusicService";
 import Rating from "@material-ui/lab/Rating";
-import StarIcon from "@material-ui/icons/Star";
-import DoneOutlineIcon from '@material-ui/icons/DoneOutline';
-import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
+import DoneOutlineIcon from "@material-ui/icons/DoneOutline";
+import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
+import { Favorite, FavoriteBorder } from "@material-ui/icons";
 
 const initialState = {
   id: null,
@@ -17,7 +25,7 @@ const initialState = {
   link: "",
 };
 
-const helpText = `soundcloud, youtube, facebook, dailymotion, vimeo, twitch 의 링크만 넣어주세요!`
+const helpText = `soundcloud, youtube, facebook, dailymotion, vimeo, twitch 의 링크만 넣어주세요!`;
 
 const AddMusicForm = ({ refresh, setRefresh, open, closeModal }) => {
   const { register, handleSubmit } = useForm();
@@ -26,6 +34,7 @@ const AddMusicForm = ({ refresh, setRefresh, open, closeModal }) => {
   const onSubmit = (data) => {
     data.id = null;
     data.rate = formdata.rate;
+    console.log(data.rate);
     create(data).then(() => {
       if (refresh > 100) setRefresh(0);
       else setRefresh((rf) => rf + 1);
@@ -40,7 +49,10 @@ const AddMusicForm = ({ refresh, setRefresh, open, closeModal }) => {
 
   return (
     <Modal
-      onClose={closeModal}
+      onClose={() => {
+        closeModal();
+        setFormData({});
+      }}
       open={open}
       className={modal.root}
       closeAfterTransition
@@ -54,7 +66,9 @@ const AddMusicForm = ({ refresh, setRefresh, open, closeModal }) => {
           <Rating
             id="rate"
             name="rate"
-            icon={<StarIcon fontSize="inherit" />}
+            precision={0.5}
+            icon={<Favorite color="secondary" fontSize="inherit" />}
+            emptyIcon={<FavoriteBorder color="secondary" />}
             value={formdata.rate}
             onChange={handleChange}
           />
@@ -64,9 +78,11 @@ const AddMusicForm = ({ refresh, setRefresh, open, closeModal }) => {
             id="title"
             name="title"
             label="제목"
-            inputRef={register({ required: true, maxLength: 5 })}
+            required
+            autoComplete="off"
+            inputRef={register}
             value={formdata.title}
-            onChange={handleChange}            
+            onChange={handleChange}
           />
           <TextField
             autoComplete={false}
@@ -74,6 +90,8 @@ const AddMusicForm = ({ refresh, setRefresh, open, closeModal }) => {
             id="timing"
             name="timing"
             label="언제?"
+            required
+            autoComplete="off"
             inputRef={register}
             value={formdata.timing}
             onChange={handleChange}
@@ -85,6 +103,8 @@ const AddMusicForm = ({ refresh, setRefresh, open, closeModal }) => {
             id="comment"
             name="comment"
             label="한줄평"
+            required
+            autoComplete="off"
             inputRef={register}
             value={formdata.comment}
             onChange={handleChange}
@@ -96,6 +116,8 @@ const AddMusicForm = ({ refresh, setRefresh, open, closeModal }) => {
             name="link"
             label="링크"
             helperText="해당 노래를 들을 수 있는 주소를 적어주세요!"
+            required
+            autoComplete="off"
             inputRef={register}
             value={formdata.link}
             onChange={handleChange}
@@ -103,13 +125,17 @@ const AddMusicForm = ({ refresh, setRefresh, open, closeModal }) => {
               endAdornment: (
                 <InputAdornment position="end">
                   <Tooltip title={helpText}>
-                  <HelpOutlineIcon/>
+                    <HelpOutlineIcon />
                   </Tooltip>
                 </InputAdornment>
               ),
             }}
           />
-          <IconButton type="submit"><Tooltip><DoneOutlineIcon/></Tooltip></IconButton>     
+          <IconButton type="submit">
+            <Tooltip>
+              <DoneOutlineIcon />
+            </Tooltip>
+          </IconButton>
         </form>
       </Paper>
     </Modal>

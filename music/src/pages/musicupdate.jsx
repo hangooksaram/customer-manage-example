@@ -17,8 +17,8 @@ const MusicUpdate = ({ setRefresh, setUpdate, music }) => {
             <UpdateMusicForm setRefresh={setRefresh} music={music} />
           </Grid>
           <Grid item xs={2}>
-            <IconButton>
-              <ArrowBackIosIcon onClick={handleClick} />
+            <IconButton onClick={handleClick}>
+              <ArrowBackIosIcon />
             </IconButton>
           </Grid>
         </Grid>

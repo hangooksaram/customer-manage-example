@@ -10,13 +10,12 @@ import { getAll, remove, getOne } from "../api/MusicService";
 import musicsStyle from "../styles/musicsStyle";
 import AppBar from "./AppBar";
 import Rating from "@material-ui/lab/Rating";
-import StarIcon from "@material-ui/icons/Star";
 import PauseIcon from "@material-ui/icons/Pause";
 import MusicDetail from "./../pages/musicdetail";
 import UpdateIcon from "@material-ui/icons/Update";
 import MusicUpdate from "./../pages/musicupdate";
 import IconButton from "@material-ui/core/IconButton";
-
+import { Favorite, FavoriteBorder } from "@material-ui/icons";
 
 const MusicList = () => {
   const musicList = musicsStyle();
@@ -25,7 +24,7 @@ const MusicList = () => {
   const [link, setLink] = useState(null);
   const [detail, setDetail] = useState(0);
   const [update, setUpdate] = useState(0);
-  const [pause, setPause] = useState(true);
+  const [pause, setPause] = useState(false);
   const [refresh, setRefresh] = useState(0);
   const [search, setSearch] = useState("");
   useEffect(() => {
@@ -71,7 +70,9 @@ const MusicList = () => {
       <Grid className={musicList.root} container spacing={4}>
         {musics
           .filter((m) => {
-            return search ? m.title.includes(search) : musics;
+            return search.toLowerCase()
+              ? m.title.toLowerCase().includes(search)
+              : musics;
           })
           .map((music) => {
             return (
@@ -90,7 +91,9 @@ const MusicList = () => {
                       variant="outlined"
                       square
                       className={
-                        link?.link === music.link ? musicList.playing : musicList.paper
+                        link?.link === music.link
+                          ? musicList.playing
+                          : musicList.paper
                       }
                     >
                       <Grid container spacing={2}>
@@ -109,33 +112,35 @@ const MusicList = () => {
                         <Grid item xs={12}>
                           <Rating
                             name="read-only"
-                            icon={<StarIcon fontSize="inherit" />}
+                            precision={0.5}
+                            icon={<Favorite color="secondary" />}
+                            emptyIcon={<FavoriteBorder color="secondary" />}
                             value={music.rate}
                             readOnly
                           />
                         </Grid>
                         <Grid item xs={4}>
-                          <IconButton>
-                            <DeleteIcon
-                              onClick={() => handleClickDeleteIcon(music.id)}
-                              className={musicList.deleteIcon}
-                            />
+                          <IconButton
+                            onClick={() => handleClickDeleteIcon(music.id)}
+                            className={musicList.deleteIcon}
+                          >
+                            <DeleteIcon />
                           </IconButton>
                         </Grid>
                         <Grid item xs={4}>
-                          <IconButton>
-                            <UpdateIcon
-                              onClick={() => handleClickUpdateIcon(music.id)}
-                              className={musicList.updateIcon}
-                            />
+                          <IconButton
+                            onClick={() => handleClickUpdateIcon(music.id)}
+                            className={musicList.updateIcon}
+                          >
+                            <UpdateIcon />
                           </IconButton>
                         </Grid>
                         <Grid item xs={4}>
-                          <IconButton>
-                            <SearchIcon
-                              onClick={() => handleClickDetailIcon(music.id)}
-                              className={musicList.detailIcon}
-                            ></SearchIcon>
+                          <IconButton
+                            onClick={() => handleClickDetailIcon(music.id)}
+                            className={musicList.detailIcon}
+                          >
+                            <SearchIcon></SearchIcon>
                           </IconButton>
                         </Grid>
                         <Grid item xs={12}>

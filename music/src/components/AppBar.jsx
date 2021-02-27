@@ -7,7 +7,7 @@ import logo from "./logo.jpg";
 import IconButton from "@material-ui/core/IconButton";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import PauseIcon from "@material-ui/icons/Pause";
-import { TextField } from "@material-ui/core";
+import { TextField, Box } from "@material-ui/core";
 import { Grid } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 
@@ -22,73 +22,49 @@ const AppBar = ({ title, pause, setPause, link, search, setSearch }) => {
         <Grid item xs={3}>
           <img style={{ width: "60%", height: "90%" }} src={logo} />
         </Grid>
-        <Grid container justify="flex-start" item xs={5}>
-          {title ? (
-            <>
-              <Grid
-                alignItems="center"
-                style={{ overflow: "hidden" }}
-                item
-                container
-                xs={8}
-              >
-                <Typography color="textSecondary" className={appbar.playing}>
-                  now playing ~ {title} ~
-                </Typography>
-              </Grid>
-              {!pause ? (
-                <Grid
-                  container
-                  justify="center"
-                  alignItems="center"
-                  item
-                  xs={4}
-                >
-                  <IconButton>
-                    <PlayArrowIcon
-                      color="textSecondary"
-                      fontSize="large"
-                      onClick={() => setPause(true)}
-                    />
-                  </IconButton>
-                </Grid>
-              ) : (
-                <Grid
-                  container
-                  justify="center"
-                  alignItems="center"
-                  item
-                  xs={4}
-                >
-                  <IconButton>
-                    <PauseIcon
-                      color="textSecondary"
-                      fontSize="large"
-                      onClick={() => setPause(false)}
-                    />
-                  </IconButton>
-                </Grid>
-              )}
-            </>
+        <Grid container alignItems="center" justify="flex-start" item xs={5}>
+          <Grid
+            style={{ overflow: "hidden", height: "100%" }}
+            className={appbar.playingContainer}
+            item
+            container
+            xs={8}
+          >
+            {title ? (
+              <Typography color="textSecondary" className={appbar.playing}>
+                now playing {title}
+              </Typography>
+            ) : (
+              <Typography className={appbar.notPlaying}>
+                아직 선택한 곡이 없네요
+              </Typography>
+            )}
+          </Grid>
+          {!pause ? (
+            <Grid container justify="center" alignItems="center" item xs={4}>
+              <IconButton onClick={() => setPause(true)}>
+                <PlayArrowIcon color="textSecondary" fontSize="large" />
+              </IconButton>
+            </Grid>
           ) : (
-            ""
+            <Grid container justify="center" alignItems="center" item xs={4}>
+              <IconButton onClick={() => setPause(false)}>
+                <PauseIcon color="textSecondary" fontSize="large" />
+              </IconButton>
+            </Grid>
           )}
         </Grid>
-        <Grid container alignItems="center" justify="flex-end" item xs={4}>
+        <Grid container alignItems="center" justify="center" item xs={4}>
           <SearchIcon fontSize="large" />
           <TextField
+            style={{ width: "80%" }}
             values={search}
             onChange={handleChange}
             variant="outlined"
           />
         </Grid>
       </Grid>
-      <ReactPlayer
-        style={{ display: "none" }}
-        width=""
-        playing={pause}
-        url={link}
-      />
+      <ReactPlayer style={{ display: "none" }} playing={pause} url={link} />
     </Paper>
   );
 };
