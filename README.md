@@ -1,8 +1,6 @@
 # 간편한 음악 플레이리스트 Sound Fountain
 
-![Watch the video](https://www.youtube.com/watch?v=7g--Bltkx5Y)
-
-![image](https://user-images.githubusercontent.com/55138387/109382940-b8bc5300-7926-11eb-90fd-df5fa2128102.png)
+#### [동영상으로 보기](https://www.youtube.com/watch?v=7g--Bltkx5Y)
 
 ![image](https://user-images.githubusercontent.com/55138387/109382538-5c583400-7924-11eb-9bd2-4c2d03a53a5a.png)
 
