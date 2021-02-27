@@ -1,6 +1,6 @@
 # 간편한 음악 플레이리스트 Sound Fountain
 
-<iframe width="737" height="355" src="https://www.youtube.com/embed/7g--Bltkx5Y" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![Watch the video](https://img.youtube.com/vi/T-D1KVIuvjA/maxresdefault.jpg)](https://youtu.be/T-D1KVIuvjA)
 
 ![image](https://user-images.githubusercontent.com/55138387/109382538-5c583400-7924-11eb-9bd2-4c2d03a53a5a.png)
 
@@ -33,6 +33,3 @@
 + Architecture : [Express js](https://expressjs.com/)
 + DB : [MySQL](https://www.mysql.com/)
 + ORM : [sequelize](https://sequelize.org/)
-
-
-<iframe width="737" height="355" src="https://www.youtube.com/embed/7g--Bltkx5Y" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
